@@ -2,7 +2,7 @@
 
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-A simple and powerful desktop application to organize and prepare images for printing on A4 sheets, ideal for prototyping card games and other printing projects.
+A simple and powerful desktop application to organize and prepare images for printing on A4 sheets, ideal for prototyping tabletop/card games and other printing projects.
 
 ---
 
@@ -18,11 +18,8 @@ A simple and powerful desktop application to organize and prepare images for pri
 
 ---
 
-### 📥 Download (Ready Version)
-
-You can download the latest version for Windows directly from our **[Releases](https://github.com/YOUR_USER/YOUR_REPOSITORY/releases)** page.
-
-It is not necessary to install Python or any other dependency. Just download the `.zip` file, extract the `.exe`, and run it.
+### 📥 Download
+**https://github.com/YOUR_USER/YOUR_REPOSITORY/releases**
 
 ---
 
@@ -54,7 +51,7 @@ If you are a developer and want to run the project from the source code, follow 
     pip install -r requirements.txt
     ```
 
-4.  **Run the application:**
+4.  **Run the app:**
     ```bash
     python app/main.py
     ```
