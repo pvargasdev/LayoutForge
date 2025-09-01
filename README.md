@@ -2,73 +2,73 @@
 
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-Uma aplicação de desktop simples e poderosa para organizar e preparar imagens para impressão em folhas A4, ideal para prototipagem de jogos de cartas e outros projetos de impressão.
+A simple and powerful desktop application to organize and prepare images for printing on A4 sheets, ideal for prototyping card games and other printing projects.
 
 ---
 
-### ✨ Features (O Que Ele Faz?)
+### ✨ Features (What It Does)
 
-* **Upload Intuitivo:** Arraste e solte múltiplas imagens diretamente na aplicação.
-* **Layout Dinâmico:** Calcula automaticamente o número máximo de imagens que cabem em uma folha A4 com base nas dimensões fornecidas.
-* **Organização Fácil:** Reordene as imagens arrastando e soltando, e duplique ou remova com um clique.
-* **Opções de Saída Flexíveis:**
-    * Estique imagens para preencher o espaço (`Stretch to Fit`).
-    * Adicione ou remova uma borda fina para facilitar o corte.
-    * Exporte o arquivos como JPG ou PDF.
-
----
-
-### 📥 Download (Versão Pronta)
-
-Você pode baixar a versão mais recente para Windows diretamente da nossa página de **[Releases](https://github.com/SEU_USUARIO/SEU_REPOSITORIO/releases)**.
-
-Não é necessário instalar Python ou qualquer outra dependência. Basta baixar o arquivo `.zip`, extrair o `.exe` e executar.
+* **Intuitive Upload:** Drag and drop multiple images directly into the application.
+* **Dynamic Layout:** Automatically calculates the maximum number of images that fit on an A4 sheet based on the provided dimensions.
+* **Easy Organization:** Reorder images by dragging and dropping, and duplicate or remove with a click.
+* **Flexible Output Options:**
+    * Stretch images to fill the space (`Stretch to Fit`).
+    * Add or remove a thin border to facilitate cutting.
+    * Export files as JPG or PDF.
 
 ---
 
-### 🚀 Como Executar (a partir do Código Fonte)
+### 📥 Download (Ready Version)
 
-Se você é um desenvolvedor e quer executar o projeto a partir do código, siga estes passos:
+You can download the latest version for Windows directly from our **[Releases](https://github.com/YOUR_USER/YOUR_REPOSITORY/releases)** page.
 
-**Pré-requisitos:**
+It is not necessary to install Python or any other dependency. Just download the `.zip` file, extract the `.exe`, and run it.
+
+---
+
+### 🚀 How to Run (from Source Code)
+
+If you are a developer and want to run the project from the source code, follow these steps:
+
+**Prerequisites:**
 * Python 3.8+
 * Git
 
-**Passos:**
+**Steps:**
 
-1.  **Clone o repositório:**
+1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git](https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git)
-    cd SEU_REPOSITORIO
+    git clone [https://github.com/YOUR_USER/YOUR_REPOSITORY.git](https://github.com/YOUR_USER/YOUR_REPOSITORY.git)
+    cd YOUR_REPOSITORY
     ```
 
-2.  **Crie um ambiente virtual (recomendado):**
+2.  **Create a virtual environment (recommended):**
     ```bash
     python -m venv .venv
-    # No Windows
+    # On Windows
     .venv\Scripts\activate
     ```
 
-3.  **Instale as dependências:**
+3.  **Install the dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Execute a aplicação:**
+4.  **Run the application:**
     ```bash
     python app/main.py
     ```
 
 ---
 
-### 🛠️ Tecnologias Utilizadas
+### 🛠️ Technologies Used
 
 * **Back-end:** Python, Flask, PyWebView, Pillow
 * **Front-end:** HTML, Tailwind CSS, JavaScript, SortableJS
-* **Empacotamento:** PyInstaller
+* **Packaging:** PyInstaller
 
 ---
 
-### 📄 Licença
+### 📄 License
 
-Este projeto é distribuído sob a Licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+This project is distributed under the MIT License. See the `LICENSE` file for more details.
