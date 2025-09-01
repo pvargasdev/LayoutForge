@@ -1,6 +1,6 @@
 # Layout Forge
 
-![Logo](app/gui/Assets/logoWhite.png) 
+![Logo](app/gui/Assets/Header.png) 
 
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
