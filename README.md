@@ -1,4 +1,4 @@
-# Layout Forge  forge.
+# Layout Forge
 
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
