@@ -25,41 +25,6 @@ A simple and powerful desktop application to organize and prepare images for pri
 
 ---
 
-### 🚀 How to Run (from Source Code)
-
-If you are a developer and want to run the project from the source code, follow these steps:
-
-**Prerequisites:**
-* Python 3.8+
-* Git
-
-**Steps:**
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/pvargas01/LayoutForge.git](https://github.com/pvargas01/LayoutForge.git)
-    cd YOUR_REPOSITORY
-    ```
-
-2.  **Create a virtual environment (recommended):**
-    ```bash
-    python -m venv .venv
-    # On Windows
-    .venv\Scripts\activate
-    ```
-
-3.  **Install the dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Run the app:**
-    ```bash
-    python app/main.py
-    ```
-
----
-
 ### 🛠️ Technologies Used
 
 * **Back-end:** Python, Flask, PyWebView, Pillow
