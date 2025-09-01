@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Forge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-4">
+
+    <main class="bg-white w-full max-w-3xl rounded-lg shadow-xl p-6 md:p-8">
+        <div class="flex justify-center mb-6">
+            <img src="assets/logo.png" alt="Company Logo" class="app-logo">
+        </div>
+
+        <form id="upload-form">
+
+            <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
+                <p class="text-slate-500">Drag and drop images here or <span class="font-semibold text-indigo-600">click to browse</span></p>
+                <input type="file" id="file-input" multiple accept="image/*">
+            </div>
+
+            <div id="image-preview-area" class="mt-6 hidden relative">
+                <div id="scroll-container" class="max-h-96 overflow-y-auto pr-2">
+                    <div class="flex justify-between items-center mb-4 sticky top-0 bg-white pt-2 pb-2 z-10">
+                        <h2 class="text-xl font-semibold text-slate-600">Uploaded Images</h2>
+                        <button type="button" id="clear-list-btn" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Clear Images
+                        </button>
+                    </div>
+                    <div id="image-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        </div>
+                </div>
+                <div id="fade-overlay" class="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-white to-transparent pointer-events-none transition-opacity opacity-0"></div>
+            </div>
+
+            <div id="action-area" class="mt-6 hidden">
+                <h2 class="text-xl font-semibold mb-4 text-slate-600">Output Options</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="card-width" class="block text-sm font-medium text-slate-700">Width (mm)</label>
+                        <input type="number" id="card-width" name="card_width_mm" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., 63" required>
+                    </div>
+                    <div>
+                        <label for="card-height" class="block text-sm font-medium text-slate-700">Height (mm)</label>
+                        <input type="number" id="card-height" name="card_height_mm" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., 88" required>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label for="stretch-toggle" class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border cursor-pointer">
+                        <span class="font-medium text-slate-700">Stretch to Fit</span>
+                        <div class="relative">
+                            <input type="checkbox" id="stretch-toggle" class="sr-only peer">
+                            <div class="w-10 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-slate-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </div>
+                    </label>
+                    <label for="border-toggle" class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border cursor-pointer">
+                        <span class="font-medium text-slate-700">Add Thin Border</span>
+                        <div class="relative">
+                            <input type="checkbox" id="border-toggle" class="sr-only peer" checked>
+                            <div class="w-10 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-slate-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </div>
+                    </label>
+                </div>
+
+                <button type="submit" id="generate-btn" class="mt-6 w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center">
+                    <span id="btn-text">Generate Sheets</span>
+                    <svg id="btn-spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+
+        <div id="results-section" class="mt-6 hidden">
+            <h2 class="text-xl font-semibold mb-4 text-green-700">✅ Layout Generated Successfully!</h2>
+            <p class="text-slate-600 mb-4">Click the buttons below to download.</p>
+            <div id="download-links" class="space-y-2">
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

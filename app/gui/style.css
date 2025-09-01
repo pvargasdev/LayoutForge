@@ -1,0 +1,41 @@
+#file-input {
+    display: none;
+}
+
+.drag-over {
+    border-color: #6366f1;
+    background-color: #eef2ff;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+    background-color: #c7d2fe;
+}
+
+.sortable-chosen {
+    cursor: grabbing;
+    opacity: 0.8;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+#fade-overlay.is-visible {
+    opacity: 1;
+}
+
+#results-section {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.app-logo {
+    max-width: 250px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+    .app-logo {
+        max-width: 180px;
+    }
+}
