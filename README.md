@@ -1,5 +1,7 @@
 # Layout Forge
 
+![Logo](app/gui/Assets/logoWhite.png) 
+
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 A simple and powerful desktop application to organize and prepare images for printing on A4 sheets, ideal for prototyping tabletop/card games and other printing projects.
