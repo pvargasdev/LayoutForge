@@ -19,7 +19,7 @@ A simple and powerful desktop application to organize and prepare images for pri
 ---
 
 ### 📥 Download
-**https://github.com/YOUR_USER/YOUR_REPOSITORY/releases**
+**https://github.com/pvargas01/LayoutForge/releases**
 
 ---
 
@@ -35,7 +35,7 @@ If you are a developer and want to run the project from the source code, follow 
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/YOUR_USER/YOUR_REPOSITORY.git](https://github.com/YOUR_USER/YOUR_REPOSITORY.git)
+    git clone [https://github.com/pvargas01/LayoutForge.git](https://github.com/pvargas01/LayoutForge.git)
     cd YOUR_REPOSITORY
     ```
 
