@@ -6,14 +6,6 @@ Uma aplicação de desktop simples e poderosa para organizar e preparar imagens 
 
 ---
 
-### Demonstração
-
-*(**DICA:** Grave um GIF curto mostrando o programa em ação e coloque aqui. É a melhor forma de mostrar o que ele faz! Ferramentas como ScreenToGif para Windows são ótimas para isso.)*
-
-![Exemplo de GIF da aplicação](caminho/para/seu/gif.gif) 
-
----
-
 ### ✨ Features (O Que Ele Faz?)
 
 * **Upload Intuitivo:** Arraste e solte múltiplas imagens diretamente na aplicação.
@@ -22,10 +14,7 @@ Uma aplicação de desktop simples e poderosa para organizar e preparar imagens 
 * **Opções de Saída Flexíveis:**
     * Estique imagens para preencher o espaço (`Stretch to Fit`).
     * Adicione ou remova uma borda fina para facilitar o corte.
-* **Exportação Múltipla:**
-    * Se o layout resultar em **uma única folha**, baixe como **JPG** ou **PDF**.
-    * Se resultar em **múltiplas folhas**, baixe todas como um **pacote .zip** ou como um **único PDF de várias páginas**.
-* **Abre a Pasta de Destino:** Após o download, a aplicação abre automaticamente a pasta de saída para acesso imediato aos seus arquivos.
+    * Exporte o arquivos como JPG ou PDF.
 
 ---
 
