@@ -22,7 +22,7 @@ A simple and powerful desktop application to organize and prepare images for pri
 ---
 
 ### 📥 Download
-**https://github.com/pvargas01/LayoutForge/releases**
+**https://github.com/pvargasdev/LayoutForge/releases**
 
 ---
 
