@@ -12,7 +12,7 @@ A simple and powerful desktop application to organize and prepare images for pri
 
 * **Intuitive Upload:** Drag and drop multiple images directly into the application.
 * **Precise Dimensions:** Set the exact width and height in millimeters, generating a print-ready layout with accurate sizing.
-* **Dynamic Layout:** Automatically calculates the maximum number of images that fit on an A4 sheet based on the provided dimensions.
+* **Multi-Page Generation:** Automatically calculates how many images fit per A4 sheet and generates multiple pages at once to accommodate all your images.
 * **Easy Organization:** Reorder images by dragging and dropping, and duplicate or remove with a click.
 * **Flexible Output Options:**
     * Stretch images to fill the space (`Stretch to Fit`).
