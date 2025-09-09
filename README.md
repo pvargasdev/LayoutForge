@@ -10,7 +10,6 @@ A simple and powerful desktop application to organize and prepare images for pri
 
 ### ✨ Features (What It Does)
 
-* **Intuitive Upload:** Drag and drop multiple images directly into the application.
 * **Precise Dimensions:** Set the exact width and height in millimeters, generating a print-ready layout with accurate sizing.
 * **Multi-Page Generation:** Automatically calculates how many images fit per A4 sheet and generates multiple pages at once to accommodate all your images.
 * **Easy Organization:** Reorder images by dragging and dropping, and duplicate or remove with a click.
