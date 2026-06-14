@@ -1,7 +1,8 @@
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageCms, ImageChops
 import os
 import math
 import zipfile
+import io
 
 DPI = 300
 A4_WIDTH_MM = 210
@@ -91,6 +92,32 @@ def create_print_sheets(layout_plan, image_path_list, card_width_mm, card_height
         for j, image_path in enumerate(images_for_this_sheet):
             try:
                 original_image = Image.open(image_path)
+
+                if original_image.mode == 'CMYK':
+                    # Tenta converter usando o perfil de cor (ICC) real da imagem sem inverter
+                    icc = original_image.info.get('icc_profile')
+                    if icc:
+                        try:
+                            f = io.BytesIO(icc)
+                            src_profile = ImageCms.ImageCmsProfile(f)
+                            dst_profile = ImageCms.createProfile('sRGB')
+                            original_image = ImageCms.profileToProfile(original_image, src_profile, dst_profile, outputMode='RGB')
+                        except Exception as e:
+                            print(f"Aviso - Falha no ICC: {e}")
+                            original_image = original_image.convert('RGB')
+                    else:
+                        original_image = original_image.convert('RGB')
+
+                elif original_image.mode == 'RGBA':
+                    # Trata imagens PNG com fundo transparente
+                    background = Image.new('RGB', original_image.size, (255, 255, 255))
+                    background.paste(original_image, mask=original_image.getchannel('A'))
+                    original_image = background
+                    
+                elif original_image.mode != 'RGB':
+                    # Outros formatos (escala de cinza, etc)
+                    original_image = original_image.convert('RGB')
+
                 if stretch_to_fit:
                     processed_card = resize_with_stretch(original_image, card_width_px, card_height_px)
                 else:

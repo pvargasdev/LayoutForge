@@ -10,3 +10,5 @@ venv/
 # System Files
 .DS_Store
 Thumbs.db
+/Input
+/Output (Generated Files)
