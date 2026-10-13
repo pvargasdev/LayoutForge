@@ -258,10 +258,16 @@ body { display: flex; flex-direction: column; min-height: 100vh; overflow: hidde
 .card-item.missing { border-color: rgba(255, 92, 92, 0.4); }
 .card-item.missing .card-thumb img { filter: grayscale(1) brightness(0.4); }
 
-.card-thumb { position: relative; aspect-ratio: 4/3; background: #050506; overflow: hidden; cursor: grab; }
+.card-thumb { position: relative; aspect-ratio: 1/1; background: #0E0E11;; overflow: hidden; cursor: grab; }
 .card-thumb:active { cursor: grabbing; }
-.card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.92); transition: transform 0.25s, filter 0.25s; }
-.card-item:hover .card-thumb img { transform: scale(1.03); filter: saturate(1); }
+.card-thumb img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: saturate(0.92);
+    transition: transform 0.25s, filter 0.25s;
+}
+.card-item:hover .card-thumb img { transform: scale(1.02); filter: saturate(1); }
 
 .card-index {
     position: absolute; top: 6px; left: 6px;

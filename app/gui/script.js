@@ -635,9 +635,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 r.onload = (e) => { img.src = e.target.result; };
                 r.readAsDataURL(item.file);
             } else if (item.path) {
-                img.src = `file:///${item.path.replace(/\\/g, '/')}`;
+                img.src = `${BACKEND_URL}/api/thumb?path=${encodeURIComponent(item.path)}`;
                 img.onerror = () => {
-                    // Most browsers can't load file:// — fall back to silent placeholder
                     img.style.display = 'none';
                     el.querySelector('.card-thumb').style.background =
                         'repeating-linear-gradient(45deg,#16161a,#16161a 8px,#101014 8px,#101014 16px)';

@@ -1,3 +1,4 @@
+import mimetypes
 import os
 import threading
 import time
@@ -8,9 +9,11 @@ import json
 import uuid
 import subprocess
 from datetime import datetime, timezone
-from flask import Flask, request, jsonify, send_from_directory
+
+from flask import Flask, request, jsonify, send_from_directory, send_file, abort
 import webview
 from werkzeug.utils import secure_filename
+
 import image_processor
 
 
@@ -39,8 +42,8 @@ def _data_dir():
     return path
 
 
-RESOURCE_DIR   = _resource_dir()
-DATA_DIR       = _data_dir()
+RESOURCE_DIR    = _resource_dir()
+DATA_DIR        = _data_dir()
 PROJECTS_FOLDER = os.path.join(DATA_DIR, 'projects')
 TEMP_FOLDER     = os.path.join(DATA_DIR, 'temp')
 SETTINGS_FILE   = os.path.join(DATA_DIR, 'settings.json')
@@ -50,6 +53,17 @@ for _d in (PROJECTS_FOLDER, TEMP_FOLDER):
     os.makedirs(_d, exist_ok=True)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
+_ALLOWED_THUMB_EXT = {'.png', '.jpg', '.jpeg', '.bmp', '.gif', '.webp'}
+
+
+# ─────────────────────────────────────────────────────────────
+#  pywebview safety net — prevents deep recursion during JS API
+#  introspection when a native object is stored as an attribute.
+# ─────────────────────────────────────────────────────────────
+try:
+    webview.settings['JS_API_MAX_DEPTH'] = 2
+except Exception as _e:
+    print(f'could not set JS_API_MAX_DEPTH: {_e}')
 
 
 # ─────────────────────────────────────────────────────────────
@@ -112,17 +126,22 @@ def _first_of(result):
 
 
 class JsApi:
+    """All instance attributes MUST start with `_` so pywebview's
+    introspection doesn't recurse into native window objects."""
+
     def __init__(self):
-        self.window = None
+        self._window = None
 
     def set_window(self, w):
-        self.window = w
+        self._window = w
+
+    # ── file pickers ─────────────────────────────────────────
 
     def pick_images(self):
-        if not self.window:
+        if not self._window:
             return []
         try:
-            result = self.window.create_file_dialog(
+            result = self._window.create_file_dialog(
                 webview.OPEN_DIALOG,
                 allow_multiple=True,
                 file_types=('Images (*.png;*.jpg;*.jpeg;*.bmp)', 'All files (*.*)')
@@ -133,17 +152,19 @@ class JsApi:
             return []
 
     def pick_folder(self):
-        if not self.window:
+        if not self._window:
             return None
         try:
-            result = self.window.create_file_dialog(webview.FOLDER_DIALOG)
+            result = self._window.create_file_dialog(webview.FOLDER_DIALOG)
             return _first_of(result)
         except Exception as e:
             print('pick_folder failed:', e)
             return None
 
+    # ── save dialog ──────────────────────────────────────────
+
     def save_file(self, temp_path, suggested_name, kind='pdf'):
-        if not self.window:
+        if not self._window:
             return {'ok': False, 'error': 'Window not ready.'}
         if not temp_path or not os.path.isfile(temp_path):
             return {'ok': False, 'error': 'Generated file is missing.'}
@@ -160,7 +181,7 @@ class JsApi:
         }.get(kind, ('All files (*.*)',))
 
         try:
-            result = self.window.create_file_dialog(
+            result = self._window.create_file_dialog(
                 webview.SAVE_DIALOG,
                 directory=default_dir,
                 save_filename=suggested_name,
@@ -190,6 +211,8 @@ class JsApi:
         except Exception as e:
             print('save_file copy failed:', e)
             return {'ok': False, 'error': f'Could not save: {e}'}
+
+    # ── reveal ───────────────────────────────────────────────
 
     def reveal_path(self, path):
         if not path or not os.path.exists(path):
@@ -347,6 +370,12 @@ def index():
     return app.send_static_file('index.html')
 
 
+@app.route('/favicon.ico')
+def favicon():
+    """Silence the WebView's automatic favicon request."""
+    return ('', 204)
+
+
 @app.route('/api/app-info', methods=['GET'])
 def app_info():
     return jsonify({
@@ -370,6 +399,31 @@ def patch_settings():
         s['last_save_dir'] = data['last_save_dir']
     save_settings(s)
     return jsonify(s)
+
+
+@app.route('/api/thumb')
+def serve_thumb():
+    """Serve an image file from disk so the WebView can render it.
+
+    Chromium blocks file:/// URLs from http pages, so we proxy the
+    raw bytes here instead.
+    """
+    raw = request.args.get('path', '')
+    if not raw:
+        abort(400)
+    path = os.path.abspath(os.path.normpath(raw))
+    if not os.path.isfile(path):
+        abort(404)
+    ext = os.path.splitext(path)[1].lower()
+    if ext not in _ALLOWED_THUMB_EXT:
+        abort(415)
+    mime, _ = mimetypes.guess_type(path)
+    try:
+        return send_file(path, mimetype=mime or 'application/octet-stream',
+                         conditional=True, max_age=0)
+    except Exception as e:
+        print(f'thumb failed for {path}: {e}')
+        abort(500)
 
 
 @app.route('/open-folder', methods=['POST'])
@@ -700,7 +754,7 @@ def generate_file():
 # ─────────────────────────────────────────────────────────────
 
 def run_server():
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='127.0.0.1', port=5000, threaded=True)
 
 
 def shutdown():
