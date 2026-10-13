@@ -1,93 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layout Forge</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LayoutForge</title>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-4">
+<body>
 
-    <main class="bg-white w-full max-w-3xl rounded-lg shadow-xl p-6 md:p-8">
-        <div class="flex justify-center mb-6">
-            <img src="assets/logo.png" alt="Company Logo" class="app-logo">
-        </div>
+<!-- ════════════════════ TOP BAR ════════════════════ -->
+<header class="app-bar">
+    <div class="brand" id="brand-home" role="button" tabindex="0" aria-label="Home">
+        <div class="brand-name">LayoutForge</div>
+    </div>
 
-        <form id="upload-form">
+    <nav id="breadcrumb" class="breadcrumb" aria-label="Location"></nav>
 
-            <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
-                <p class="text-slate-500">Drag and drop images here or <span class="font-semibold text-indigo-600">click to browse</span></p>
-                <input type="file" id="file-input" multiple accept="image/*">
-            </div>
+    <div class="topbar-right">
+        <div id="file-stats" class="stats"></div>
+        <button id="generate-btn" class="btn btn-primary hidden" type="button">
+            <svg id="btn-spinner" class="spinner hidden" viewBox="0 0 24 24" fill="none" width="13" height="13">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+                <path d="M21 12a9 9 0 0 1-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span id="btn-text">Generate sheets</span>
+        </button>
+    </div>
+</header>
 
-            <div id="image-preview-area" class="mt-6 hidden relative">
-                <div id="scroll-container" class="max-h-96 overflow-y-auto pr-2">
-                    <div class="flex justify-between items-center mb-4 sticky top-0 bg-white pt-2 pb-2 z-10">
-                        <h2 class="text-xl font-semibold text-slate-600">Uploaded Images</h2>
-                        <button type="button" id="clear-list-btn" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Clear Images
-                        </button>
-                    </div>
-                    <div id="image-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                        </div>
-                </div>
-                <div id="fade-overlay" class="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-white to-transparent pointer-events-none transition-opacity opacity-0"></div>
-            </div>
+<main id="app">
 
-            <div id="action-area" class="mt-6 hidden">
-                <h2 class="text-xl font-semibold mb-4 text-slate-600">Output Options</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="card-width" class="block text-sm font-medium text-slate-700">Width (mm)</label>
-                        <input type="number" id="card-width" name="card_width_mm" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., 63" required>
-                    </div>
-                    <div>
-                        <label for="card-height" class="block text-sm font-medium text-slate-700">Height (mm)</label>
-                        <input type="number" id="card-height" name="card_height_mm" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., 88" required>
-                    </div>
-                </div>
-
-                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <label for="stretch-toggle" class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border cursor-pointer">
-                        <span class="font-medium text-slate-700">Stretch to Fit</span>
-                        <div class="relative">
-                            <input type="checkbox" id="stretch-toggle" class="sr-only peer">
-                            <div class="w-10 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-slate-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                        </div>
-                    </label>
-                    <label for="border-toggle" class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border cursor-pointer">
-                        <span class="font-medium text-slate-700">Add Thin Border</span>
-                        <div class="relative">
-                            <input type="checkbox" id="border-toggle" class="sr-only peer" checked>
-                            <div class="w-10 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-slate-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                        </div>
-                    </label>
-                </div>
-
-                <button type="submit" id="generate-btn" class="mt-6 w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center">
-                    <span id="btn-text">Generate Sheets</span>
-                    <svg id="btn-spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+<!-- ════════════════════ HOME ════════════════════ -->
+<section id="view-home" class="view">
+    <div class="home">
+        <div class="home-intro">
+            <p class="home-sub">Compose print sheets from a folder of images on your disk.</p>
+            <div class="home-actions">
+                <button id="quick-start-btn" type="button" class="btn">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
+                    Quick session
+                </button>
+                <button id="new-project-btn" type="button" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+                    </svg>
+                    New project
                 </button>
             </div>
-        </form>
+        </div>
 
-        <div id="results-section" class="mt-6 hidden">
-            <h2 class="text-xl font-semibold mb-4 text-green-700">✅ Layout Generated Successfully!</h2>
-            <p class="text-slate-600 mb-4">Click the buttons below to download.</p>
-            <div id="download-links" class="space-y-2">
+        <div class="projects-head">
+            <h2>Projects</h2>
+            <div class="projects-head-right">
+                <input id="project-search" type="search" class="search-input" placeholder="Search projects…" autocomplete="off" />
             </div>
         </div>
-    </main>
 
-    <script src="script.js" defer></script>
+        <div id="projects-list" class="projects"></div>
+
+        <div id="projects-empty" class="empty-state hidden">
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <p class="empty-title">No projects yet</p>
+            <p class="empty-desc">Create a project pointing at a folder of images. Whenever you swap or add files there, reopen the project to regenerate the sheets.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════ EDITOR ════════════════════ -->
+<section id="view-editor" class="view hidden">
+    <div class="workspace">
+
+        <aside class="sidebar">
+            <form id="upload-form" autocomplete="off">
+
+                <div id="project-panel" class="panel hidden">
+                    <header class="panel-head">
+                        <h2>Source</h2>
+                        <button type="button" class="icon-btn" id="project-settings-btn" title="Project settings" aria-label="Project settings">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/>
+                            </svg>
+                        </button>
+                    </header>
+                    <div class="panel-body">
+                        <div class="source-info">
+                            <span class="source-mode" id="source-mode-label">Folder</span>
+                            <span class="source-path" id="source-path" title="">—</span>
+                        </div>
+                        <button type="button" id="rescan-btn" class="btn btn-block btn-sm">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Rescan folder
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <header class="panel-head"><h2>Card</h2></header>
+                    <div class="panel-body">
+                        <div class="field-row">
+                            <label>
+                                <span>Width</span>
+                                <div class="input-suffix">
+                                    <input type="number" id="card-width" min="1" step="1" value="63" required>
+                                    <em>mm</em>
+                                </div>
+                            </label>
+                            <label>
+                                <span>Height</span>
+                                <div class="input-suffix">
+                                    <input type="number" id="card-height" min="1" step="1" value="88" required>
+                                    <em>mm</em>
+                                </div>
+                            </label>
+                        </div>
+
+                        <label class="switch-row">
+                            <div>
+                                <span class="switch-label">Fill card area</span>
+                                <span class="switch-help">Stretch to fit — may distort</span>
+                            </div>
+                            <input type="checkbox" id="stretch-toggle" class="switch">
+                        </label>
+
+                        <label class="switch-row">
+                            <div>
+                                <span class="switch-label">Add cut border</span>
+                                <span class="switch-help">1px guide per card</span>
+                            </div>
+                            <input type="checkbox" id="border-toggle" class="switch" checked>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="save-indicator" class="save-indicator hidden">
+                    <span class="dot"></span>
+                    <span id="save-indicator-text">Saved</span>
+                </div>
+            </form>
+        </aside>
+
+        <section class="content">
+            <div id="drop-zone" class="drop-bar" tabindex="0" role="button" aria-label="Add images">
+                <input type="file" id="file-input" multiple accept="image/png,image/jpeg,image/bmp">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+                </svg>
+                <span id="drop-zone-label"><b>Add images</b> — click or drop files here</span>
+            </div>
+
+            <div id="image-preview-area" class="preview hidden">
+                <div class="preview-head">
+                    <h2>Arrangement</h2>
+                </div>
+                <div id="scroll-container" class="scroll-region">
+                    <div id="image-grid" class="image-grid"></div>
+                </div>
+            </div>
+
+            <div id="empty-state" class="empty-state">
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M4 16.5V18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1.5M7.5 7.5 12 3m0 0 4.5 4.5M12 3v13.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <p class="empty-title">No source images</p>
+                <p class="empty-desc" id="empty-state-desc">Add PNG, JPG or BMP files to build your print sheet.</p>
+            </div>
+        </section>
+
+    </div>
+</section>
+
+</main>
+
+<!-- ════════════════════ PROJECT MODAL ════════════════════ -->
+<div id="project-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+        <header class="modal-head">
+            <div>
+                <h2 id="project-modal-title">New project</h2>
+                <p class="modal-sub" id="project-modal-sub">Reference a folder on disk or curate files manually.</p>
+            </div>
+            <button type="button" class="modal-close" id="project-modal-close" aria-label="Close">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M6 6l12 12M6 18L18 6" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </header>
+
+        <div class="modal-body">
+            <label class="modal-field">
+                <span class="modal-label">Project name</span>
+                <input type="text" id="pm-name" class="modal-input" placeholder="e.g. Product line cards" maxlength="80">
+            </label>
+
+            <div class="modal-field">
+                <span class="modal-label">Source</span>
+                <div class="segmented" id="pm-source-toggle">
+                    <button type="button" data-mode="folder" class="segmented-btn active">
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Folder
+                    </button>
+                    <button type="button" data-mode="manual" class="segmented-btn">
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/>
+                        </svg>
+                        Manual
+                    </button>
+                </div>
+            </div>
+
+            <div id="pm-folder-block" class="modal-field">
+                <span class="modal-label">Folder</span>
+                <div class="folder-picker" id="pm-folder-picker">
+                    <span class="folder-path" id="pm-folder-path">No folder selected</span>
+                    <button type="button" class="btn btn-sm" id="pm-pick-folder">Choose…</button>
+                </div>
+                <label class="checkbox-row">
+                    <input type="checkbox" id="pm-recursive">
+                    <span>Include subfolders</span>
+                </label>
+                <p class="modal-hint">Files in this folder matching PNG, JPG or BMP are picked up automatically. New files show up on next open.</p>
+            </div>
+
+            <div id="pm-manual-block" class="modal-field hidden">
+                <p class="modal-hint">Add files individually from the editor. Useful for curated sets that don't live in one folder.</p>
+            </div>
+        </div>
+
+        <footer class="modal-foot">
+            <button type="button" class="btn" id="pm-cancel">Cancel</button>
+            <button type="button" class="btn btn-primary" id="pm-submit">Create project</button>
+        </footer>
+    </div>
+</div>
+
+<!-- ════════════════════ RESULTS MODAL ════════════════════ -->
+<div id="results-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+        <header class="modal-head">
+            <div>
+                <h2 id="modal-title">Output ready</h2>
+                <p class="modal-sub" id="results-project-sub">Your sheet composition has been rendered.</p>
+            </div>
+            <button type="button" class="modal-close" id="modal-close-btn" aria-label="Close">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M6 6l12 12M6 18L18 6" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </header>
+
+        <div id="results-summary" class="modal-body"></div>
+
+        <footer class="modal-foot">
+            <button type="button" id="back-btn" class="btn">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Back to editor
+            </button>
+            <div id="download-links" class="download-actions"></div>
+        </footer>
+    </div>
+</div>
+
+<!-- ════════════════════ CONFIRM MODAL ════════════════════ -->
+<div id="confirm-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-card-sm">
+        <header class="modal-head">
+            <div>
+                <h2 id="confirm-title">Are you sure?</h2>
+                <p class="modal-sub" id="confirm-msg">This action cannot be undone.</p>
+            </div>
+        </header>
+        <footer class="modal-foot">
+            <button type="button" class="btn" id="confirm-cancel">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirm-ok">Confirm</button>
+        </footer>
+    </div>
+</div>
+
+<div id="toast-region" class="toast-region"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
